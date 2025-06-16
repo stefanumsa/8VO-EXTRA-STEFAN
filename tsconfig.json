@@ -1,11 +1,11 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",                          
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["react", "react-native"]
+    "types": ["react", "react-native"],
+    "jsx": "react-native"  // 👈 ESTA ES LA LÍNEA CLAVE
   }
 }
