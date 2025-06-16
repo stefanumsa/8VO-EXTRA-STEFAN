@@ -20,7 +20,6 @@ export default function Tester() {
     }
   };
 
-  // Ejecuta la prueba cada vez que cambie la expresión o el texto
   React.useEffect(() => {
     testRegex(regex, flags, text);
   }, [regex, flags, text]);
