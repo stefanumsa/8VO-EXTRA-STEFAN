@@ -26,7 +26,7 @@ export default function Tester() {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20, marginBottom: 12 }}>Visualizador de Expresiones Regulares</Text>
+      <Text style={{ fontSize: 20,textAlign: 'center', marginBottom: 12 }}>Visualizador de Expresiones Regulares</Text>
 
       <Text style={{ marginBottom: 4 }}>Expresión Regular:</Text>
       <TextInput
