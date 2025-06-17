@@ -15,7 +15,7 @@ export default function Layout() {
       }}
     >
       {/* Definimos cada pantalla del Drawer aquí */}
-      <Drawer.Screen name="index" options={{ title: 'Menu' }} />
+      <Drawer.Screen name="index" options={{ title: 'Pagina Principal' }} />
       <Drawer.Screen name="tester" options={{ title: 'Tester' }} />
       <Drawer.Screen name="history" options={{ title: 'Historial' }} />
     </Drawer>

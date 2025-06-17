@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView } from 'react-native';
+import { generateAST } from 'src/core/utils/ast'; 
+import type { Node } from 'regexpp/ast';
 
 export default function Tester() {
   const [regex, setRegex] = useState('');
@@ -7,6 +9,7 @@ export default function Tester() {
   const [text, setText] = useState('');
   const [matches, setMatches] = useState<RegExpMatchArray[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [ast, setAST] = useState<Node | null>(null);
 
   const testRegex = (pattern: string, flags: string, input: string) => {
     try {
@@ -14,45 +17,64 @@ export default function Tester() {
       const allMatches = [...input.matchAll(re)];
       setMatches(allMatches);
       setError(null);
+
+      const tree = generateAST(pattern);
+      setAST(tree);
     } catch (e: any) {
       setError(e.message);
       setMatches([]);
+      setAST(null);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     testRegex(regex, flags, text);
   }, [regex, flags, text]);
 
+  const renderAST = (node: Node, depth: number = 0): JSX.Element => {
+    const children: Node[] =
+      (node as any).elements || (node as any).alternatives || [];
+
+    return (
+      <View key={Math.random()} style={{ marginLeft: depth * 16 }}>
+        <Text style={{ fontWeight: 'bold' }}>
+          {node.type} {('raw' in node ? `(${(node as any).raw})` : '')}
+        </Text>
+        {children.map((child, index) => renderAST(child, depth + 1))}
+      </View>
+    );
+  };
+
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20,textAlign: 'center', marginBottom: 12 }}>Visualizador de Expresiones Regulares</Text>
+      <Text style={{ fontSize: 20, textAlign: 'center', marginBottom: 12 }}>
+        Visualizador de Expresiones Regulares
+      </Text>
 
-      <Text style={{ marginBottom: 4 }}>Expresión Regular:</Text>
+      <Text>Expresión Regular:</Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
-        placeholder="Ejemplo: \b(\w+)\s+\1\b"
-        style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 12 }}
+        placeholder="Ejemplo: \\b(\\w+)\\s+\\1\\b"
+        style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
       />
 
-      <Text style={{ marginBottom: 4 }}>Bandera (flags):</Text>
+      <Text>Bandera (flags):</Text>
       <TextInput
         value={flags}
         onChangeText={setFlags}
         placeholder="Ejemplo: gi"
-        style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 12 }}
+        style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
       />
 
-      <Text style={{ marginBottom: 4 }}>Texto a analizar:</Text>
+      <Text>Texto a analizar:</Text>
       <TextInput
         value={text}
         onChangeText={setText}
-        placeholder="Ejemplo: Este es un un ejemplo para detectar palabras palabras duplicadas"
+        placeholder="Ejemplo: Este es un un ejemplo para detectar palabras duplicadas"
         multiline
         style={{
           borderWidth: 1,
-          borderColor: '#ccc',
           padding: 10,
           height: 100,
           textAlignVertical: 'top',
@@ -60,7 +82,7 @@ export default function Tester() {
         }}
       />
 
-      <Text style={{ fontWeight: 'bold', marginBottom: 4 }}>Resultado:</Text>
+      <Text style={{ fontWeight: 'bold' }}>Resultado:</Text>
       {error ? (
         <Text style={{ color: 'red' }}>{error}</Text>
       ) : matches.length === 0 ? (
@@ -69,7 +91,8 @@ export default function Tester() {
         <Text>
           {text.split('').map((char, i) => {
             const isMatched = matches.some(
-              (match) => match.index !== undefined &&
+              (match) =>
+                match.index !== undefined &&
                 i >= match.index &&
                 i < match.index + match[0].length
             );
@@ -83,6 +106,15 @@ export default function Tester() {
             );
           })}
         </Text>
+      )}
+
+      {ast && (
+        <>
+          <Text style={{ fontWeight: 'bold', marginTop: 20 }}>
+            Árbol de Sintaxis Abstracta (AST):
+          </Text>
+          <View style={{ paddingTop: 10 }}>{renderAST(ast)}</View>
+        </>
       )}
     </ScrollView>
   );
