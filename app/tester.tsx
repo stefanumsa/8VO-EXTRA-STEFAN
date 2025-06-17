@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView } from 'react-native';
-import { generateAST } from 'src/core/utils/ast'; 
+import { generateAST } from 'src/core/utils/ast';
 import type { Node } from 'regexpp/ast';
 
 export default function Tester() {
@@ -31,41 +31,70 @@ export default function Tester() {
     testRegex(regex, flags, text);
   }, [regex, flags, text]);
 
-  const renderAST = (node: Node, depth: number = 0): JSX.Element => {
+  const InteractiveNode = ({
+    node,
+    depth = 0,
+  }: {
+    node: Node;
+    depth?: number;
+  }): JSX.Element => {
+    const [expanded, setExpanded] = useState(true);
+
     const children: Node[] =
-      (node as any).elements || (node as any).alternatives || [];
+      (node as any).elements ||
+      (node as any).alternatives ||
+      (node as any).expressions ||
+      (node as any).body ||
+      [];
 
     return (
-      <View key={Math.random()} style={{ marginLeft: depth * 16 }}>
-        <Text style={{ fontWeight: 'bold' }}>
-          {node.type} {('raw' in node ? `(${(node as any).raw})` : '')}
+      <View style={{ marginLeft: depth * 12, marginVertical: 4 }}>
+        <Text
+          onPress={() => setExpanded(!expanded)}
+          style={{
+            fontWeight: 'bold',
+            color: '#1d4ed8',
+          }}
+        >
+          {expanded ? '▼' : '▶'} {node.type}{' '}
+          {'raw' in node && (node as any).raw ? `(${(node as any).raw})` : ''}
         </Text>
-        {children.map((child, index) => renderAST(child, depth + 1))}
+        {expanded &&
+          children.map((child, index) => (
+            <InteractiveNode key={index} node={child} depth={depth + 1} />
+          ))}
       </View>
     );
   };
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20, textAlign: 'center',fontWeight: 'bold', marginBottom: 12 }}>
+      <Text
+        style={{
+          fontSize: 20,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          marginBottom: 12,
+        }}
+      >
         Visualizador de Expresiones Regulares
       </Text>
 
       <Text style={{ fontWeight: 'bold' }}>Expresión Regular:</Text>
       <Text>
-  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: \b(\w+)\s+\1\b
-</Text>
+        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: \b(\w+)\s+\1\b
+      </Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
-        placeholder="Ejemplo: \b(\w+)\s+\1\b"
+        placeholder="Ejemplo: \\b(\\w+)\\s+\\1\\b"
         style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
       />
 
       <Text style={{ fontWeight: 'bold' }}>Bandera (flags):</Text>
       <Text>
-  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: gi
-</Text>
+        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: gi
+      </Text>
       <TextInput
         value={flags}
         onChangeText={setFlags}
@@ -75,8 +104,9 @@ export default function Tester() {
 
       <Text style={{ fontWeight: 'bold' }}>Texto a analizar:</Text>
       <Text>
-  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un un ejemplo para detectar palabras palabras duplicadas
-</Text>
+        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un un
+        ejemplo para detectar palabras palabras duplicadas
+      </Text>
       <TextInput
         value={text}
         onChangeText={setText}
@@ -108,7 +138,9 @@ export default function Tester() {
             return (
               <Text
                 key={i}
-                style={{ backgroundColor: isMatched ? 'yellow' : 'transparent' }}
+                style={{
+                  backgroundColor: isMatched ? 'yellow' : 'transparent',
+                }}
               >
                 {char}
               </Text>
@@ -119,10 +151,14 @@ export default function Tester() {
 
       {ast && (
         <>
-          <Text style={{ fontWeight: 'bold',textAlign: 'center' , marginTop: 20 }}>
+          <Text
+            style={{ fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}
+          >
             Árbol de Sintaxis Abstracta (AST):
           </Text>
-          <View style={{ paddingTop: 10 }}>{renderAST(ast)}</View>
+          <View style={{ paddingTop: 10 }}>
+            <InteractiveNode node={ast} />
+          </View>
         </>
       )}
     </ScrollView>
