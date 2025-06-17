@@ -47,19 +47,25 @@ export default function Tester() {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20, textAlign: 'center', marginBottom: 12 }}>
+      <Text style={{ fontSize: 20, textAlign: 'center',fontWeight: 'bold', marginBottom: 12 }}>
         Visualizador de Expresiones Regulares
       </Text>
 
-      <Text>Expresión Regular:</Text>
+      <Text style={{ fontWeight: 'bold' }}>Expresión Regular:</Text>
+      <Text>
+  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: \b(\w+)\s+\1\b
+</Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
-        placeholder="Ejemplo: \\b(\\w+)\\s+\\1\\b"
+        placeholder="Ejemplo: \b(\w+)\s+\1\b"
         style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
       />
 
-      <Text>Bandera (flags):</Text>
+      <Text style={{ fontWeight: 'bold' }}>Bandera (flags):</Text>
+      <Text>
+  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: gi
+</Text>
       <TextInput
         value={flags}
         onChangeText={setFlags}
@@ -67,11 +73,14 @@ export default function Tester() {
         style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
       />
 
-      <Text>Texto a analizar:</Text>
+      <Text style={{ fontWeight: 'bold' }}>Texto a analizar:</Text>
+      <Text>
+  <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un un ejemplo para detectar palabras palabras duplicadas
+</Text>
       <TextInput
         value={text}
         onChangeText={setText}
-        placeholder="Ejemplo: Este es un un ejemplo para detectar palabras duplicadas"
+        placeholder="Ejemplo: Este es un un ejemplo para detectar palabras palabras duplicadas"
         multiline
         style={{
           borderWidth: 1,
@@ -110,7 +119,7 @@ export default function Tester() {
 
       {ast && (
         <>
-          <Text style={{ fontWeight: 'bold', marginTop: 20 }}>
+          <Text style={{ fontWeight: 'bold',textAlign: 'center' , marginTop: 20 }}>
             Árbol de Sintaxis Abstracta (AST):
           </Text>
           <View style={{ paddingTop: 10 }}>{renderAST(ast)}</View>
