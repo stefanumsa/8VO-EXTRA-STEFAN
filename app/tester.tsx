@@ -32,7 +32,7 @@ export default function Tester() {
       <TextInput
         value={regex}
         onChangeText={setRegex}
-        placeholder="Ejemplo: \\d+"
+        placeholder="Ejemplo: \b(\w+)\s+\1\b"
         style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 12 }}
       />
 
@@ -48,7 +48,7 @@ export default function Tester() {
       <TextInput
         value={text}
         onChangeText={setText}
-        placeholder="Ejemplo: Hola 123, prueba 456"
+        placeholder="Ejemplo: Este es un un ejemplo para detectar palabras palabras duplicadas"
         multiline
         style={{
           borderWidth: 1,
