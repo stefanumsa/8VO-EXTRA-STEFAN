@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import { generateAST } from 'src/core/utils/ast';
 import type { Node } from 'regexpp/ast';
 
@@ -68,6 +68,7 @@ export default function Tester() {
   };
 
   return (
+  <SafeAreaView style={{ flex: 1 }}>
     <ScrollView contentContainerStyle={{ padding: 20 }}>
       <Text
         style={{
@@ -162,5 +163,6 @@ export default function Tester() {
         </>
       )}
     </ScrollView>
+    </SafeAreaView>
   );
 }
