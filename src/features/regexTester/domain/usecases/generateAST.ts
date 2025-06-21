@@ -1,4 +1,3 @@
-// src/features/regexTester/domain/usecases/generateAST.ts
 import { RegExpParser } from "regexpp";
 import type { Pattern } from "regexpp/ast";
 
