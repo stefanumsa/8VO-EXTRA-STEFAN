@@ -1,5 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/core/store';
+import { darkColors, lightColors } from '@/core/theme/colors';
 
 interface ButtonProps {
   title: string;
@@ -7,16 +10,21 @@ interface ButtonProps {
 }
 
 export default function Button({ title, onPress }: ButtonProps) {
+  const isDark = useSelector((state: RootState) => state.theme.isDarkMode);
+  const theme = isDark ? darkColors : lightColors;
+
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor: theme.primary }]}
+      onPress={onPress}
+    >
+      <Text style={[styles.text, { color: theme.text }]}>{title}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1E90FF',
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 30,
@@ -24,7 +32,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: '#FFFFFF',
     fontWeight: 'bold',
   },
 });

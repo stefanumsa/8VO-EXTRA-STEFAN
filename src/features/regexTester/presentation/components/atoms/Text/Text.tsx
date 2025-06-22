@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   body: {
     fontSize: 14,
-    color: '#333',
+    color: '#00000',
   },
   error: {
     fontSize: 12,

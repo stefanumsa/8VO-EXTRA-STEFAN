@@ -105,7 +105,7 @@ export default function Tester() {
           style={{ borderWidth: 1, padding: 10, marginBottom: 12 }}
         />
 
-        <Text style={{ fontWeight: 'bold' }}>Bandera (flags):</Text>
+        <Text style={{ fontWeight: 'bold' }}>Bandera:</Text>
         <Text>
           <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: gi
         </Text>

@@ -1,4 +1,7 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
+import { ThemeProvider, useTheme } from '../src/core/theme/ThemeContext';
+
 
 export default function HomeScreen() {
   return (
