@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 30,
-    elevation: 4,
+    elevation: 5,
     alignItems: 'center',
   },
   text: {
     fontWeight: 'bold',
+     fontSize: 18,
   },
 });

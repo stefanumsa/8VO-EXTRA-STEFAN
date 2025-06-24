@@ -1,8 +1,9 @@
 export const lightColors = {
   primary: '#007bff',         
-  background: '#ffffff',      
+  background: '#0056b3',      
   text: '#ffffff',               
-  highlight: '#ffff00',     
+  highlight: '#ffff00', 
+  hover: '#0056b3',    
 };
 
 export const darkColors = {

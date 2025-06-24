@@ -1,4 +1,3 @@
-// components/atoms/Text/Text.tsx
 import React from 'react';
 import { Text as RNText, StyleSheet, StyleProp, TextStyle } from 'react-native';
 import { TextProps } from './types/types';
@@ -11,11 +10,11 @@ export default Text;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   body: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#00000',
   },
   error: {

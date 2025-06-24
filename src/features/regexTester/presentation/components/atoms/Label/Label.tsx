@@ -1,4 +1,3 @@
-// components/atoms/Label/Label.tsx
 import React from 'react';
 import { Text, StyleSheet, TextStyle, StyleProp } from 'react-native';
 import { LabelProps } from './types/types';
