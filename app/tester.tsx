@@ -105,12 +105,12 @@ export default function Tester() {
 
       <Text style={{ fontWeight: 'bold' }}>Texto a analizar:</Text>
       <Text>
-        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un un ejemplo para detectar palabras palabras duplicadas
+        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un ejemplo para detectar palabras duplicadas en mayuscula.
       </Text>
       <TextInput
         value={text}
         onChangeText={setText}
-        placeholder="Este es un un ejemplo para detectar palabras palabras duplicadas"
+        placeholder="Este es un ejemplo para detectar palabras duplicadas en mayuscula."
         multiline
         style={{ borderWidth: 2, padding: 10, height: 70, textAlignVertical: 'top', borderRadius: 10, marginBottom: 12 }}
       />

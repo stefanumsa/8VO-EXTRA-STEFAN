@@ -45,6 +45,7 @@ function DrawerLayout() {
         <Drawer.Screen name="index" options={{ title: 'Página Principal' }} />
         <Drawer.Screen name="tester" options={{ title: 'Tester' }} />
         <Drawer.Screen name="history" options={{ title: 'Historial' }} />
+        <Drawer.Screen name="diagrama" options={{ title: 'Diagrama' }} />
       </Drawer>
     </>
   );
