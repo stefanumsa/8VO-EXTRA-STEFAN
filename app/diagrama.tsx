@@ -110,9 +110,10 @@ export default function Diagrama() {
   const [tree, setTree] = useState<NodeData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const hasAnyInput = regex.trim() !== '';
+
   const generarDiagrama = () => {
     try {
-      // ✅ Envolver la expresión si no tiene delimitadores
       const safeRegex = regex.startsWith('/') ? regex : `/${regex}/`;
       const ast = parse(safeRegex).body;
       const treeData = transformAST(ast);
@@ -123,6 +124,12 @@ export default function Diagrama() {
       setTree(null);
       setError('Esta expresión usa elementos no compatibles con el diagrama.');
     }
+  };
+
+  const limpiarCampo = () => {
+    setRegex('');
+    setTree(null);
+    setError(null);
   };
 
   return (
@@ -138,7 +145,18 @@ export default function Diagrama() {
         style={{ borderWidth: 1, padding: 10, borderRadius: 10, marginBottom: 12 }}
       />
 
-      <Button title="Generar Diagrama" onPress={generarDiagrama} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+        {hasAnyInput && (
+                <View style={{ marginBottom: 12 }}>
+                <Button title="Generar Diagrama." onPress={generarDiagrama} />
+              </View>
+              )}
+        {hasAnyInput && (
+                <View style={{ marginBottom: 12 }}>
+                <Button title="Limpiar Campo." onPress={limpiarCampo} />
+              </View>
+              )}
+      </View>
 
       {error && (
         <Text style={{ color: 'red', marginTop: 10, textAlign: 'center' }}>{error}</Text>
