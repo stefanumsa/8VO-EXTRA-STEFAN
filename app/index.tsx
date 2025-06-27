@@ -15,7 +15,7 @@ export default function HomeScreen() {
           <Text style={styles.bold}>Stefan Oebels Sánchez</Text>.{'\n'}
           Certificación de Software - Extraordinario.{'\n'}
           Si da click en el apartado de{' '}
-          <Text style={styles.italic}>"Página Principal"</Text>, podrá acceder a las diferentes pestañas.
+          <Text style={styles.italic}>"Página Principal"</Text>, podrá acceder a las diferentes pestañas. 
         </Text>
       </View>
 
@@ -23,12 +23,12 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>Tester</Text>
         <Text style={styles.paragraph}>
           En esta pantalla el usuario puede ingresar una expresión regular y un texto de prueba.
-          Al hacer clic en "Probar", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.
+          Al hacer clic en "Probar Expresion", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}
         </Text>
 
         <Text style={styles.subtitle}>Historial</Text>
         <Text style={styles.paragraph}>
-          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. Se puede consultar el historial completo o eliminarlo si se desea.
+          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}
         </Text>
 
         <Text style={styles.subtitle}>Diagrama</Text>
