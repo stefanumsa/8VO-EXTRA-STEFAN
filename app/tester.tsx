@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, TextInput, ScrollView, Alert } from 'react-native';
+import { View, TextInput, ScrollView, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { generateAST } from 'src/core/utils/ast';
 import type { Node } from 'regexpp/ast';
 import Button from "@/features/regexTester/presentation/components/atoms/Button/Button";
 import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
+import { useAppTheme } from '@/core/hooks/useAppTheme';
 
 export default function Tester() {
+  const colors = useAppTheme();
+
   const [regex, setRegex] = useState('');
   const [text, setText] = useState('');
   const [matches, setMatches] = useState<RegExpMatchArray[]>([]);
@@ -77,7 +80,10 @@ export default function Tester() {
 
     return (
       <View style={{ marginLeft: depth * 12, marginVertical: 4 }}>
-        <Text onPress={() => setExpanded(!expanded)} style={{ fontWeight: 'bold', color: '#000000' }}>
+        <Text
+          onPress={() => setExpanded(!expanded)}
+          style={[styles.nodeText, { color: colors.text }]}
+        >
           {expanded ? '▼' : '▶'} {node.type}{' '}
           {'raw' in node && (node as any).raw ? `(${(node as any).raw})` : ''}
         </Text>
@@ -88,52 +94,56 @@ export default function Tester() {
     );
   };
 
+  const styles = createStyles(colors);
+
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 12 }}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>
         Visualizador de Expresiones Regulares
       </Text>
 
-      <Text style={{ fontWeight: 'bold' }}>Expresión Regular:</Text>
-      <Text><Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: \b(\w+)\s+\1\b</Text>
+      <Text style={styles.label}>Expresión Regular:</Text>
+      <Text style={styles.example}><Text style={styles.labelBold}>Ejemplo</Text>: \b(\w+)\s+\1\b</Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
         placeholder="Ejemplo: \b(\w+)\s+\1\b"
-        style={{ borderWidth: 2, padding: 10, borderRadius: 10, marginBottom: 12 }}
+        placeholderTextColor="#FFFFFF"
+        style={styles.input}
       />
 
-      <Text style={{ fontWeight: 'bold' }}>Texto a analizar:</Text>
-      <Text>
-        <Text style={{ fontWeight: 'bold' }}>Ejemplo</Text>: Este es un ejemplo para detectar palabras duplicadas en mayuscula.
+      <Text style={styles.label}>Texto a analizar:</Text>
+      <Text style={styles.example}>
+        <Text style={styles.labelBold}>Ejemplo</Text>: Este es un ejemplo para detectar palabras duplicadas en mayuscula.
       </Text>
       <TextInput
         value={text}
         onChangeText={setText}
         placeholder="Este es un ejemplo para detectar palabras duplicadas en mayuscula."
         multiline
-        style={{ borderWidth: 2, padding: 10, height: 70, textAlignVertical: 'top', borderRadius: 10, marginBottom: 12 }}
+        placeholderTextColor="#FFFFFF"
+        style={[styles.input, styles.textArea]}
       />
 
       {hasAnyInput && (
-        <View style={{ marginBottom: 12 }}>
-        <Button title="Probar expresión" onPress={testRegex} />
-      </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Probar expresión" onPress={testRegex} />
+        </View>
       )}
 
       {hasAnyInput && (
-        <View style={{ marginBottom: 12 }}>
+        <View style={styles.buttonContainer}>
           <Button title="Limpiar campos" onPress={confirmClearFields} />
         </View>
       )}
 
-      <Text style={{ fontWeight: 'bold' }}>Resultado:</Text>
+      <Text style={styles.label}>Resultado:</Text>
       {error ? (
-        <Text style={{ color: 'red' }}>{error}</Text>
+        <Text style={styles.error}>{error}</Text>
       ) : matches.length === 0 ? (
-        <Text>No hay coincidencias.</Text>
+        <Text style={[styles.text, { color: '#000000' }]}>No hay coincidencias.</Text>
       ) : (
-        <Text>
+        <Text style={[styles.text, { color: '#000000' }]}>
           {text.split('').map((char, i) => {
             const isMatched = matches.some(
               (match) =>
@@ -142,7 +152,13 @@ export default function Tester() {
                 i < match.index + match[0].length
             );
             return (
-              <Text key={i} style={{ backgroundColor: isMatched ? 'yellow' : 'transparent' }}>
+              <Text
+                key={i}
+                style={{
+                  backgroundColor: isMatched ? colors.highlight : 'transparent',
+                  color: '#000000',
+                }}
+              >
                 {char}
               </Text>
             );
@@ -152,7 +168,7 @@ export default function Tester() {
 
       {ast && (
         <>
-          <Text style={{ fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>
+          <Text style={styles.titleAST}>
             Árbol de Sintaxis Abstracta (AST):
           </Text>
           <View style={{ paddingTop: 10 }}>
@@ -163,3 +179,66 @@ export default function Tester() {
     </ScrollView>
   );
 }
+
+const createStyles = (colors: any) =>
+  StyleSheet.create({
+    container: {
+      padding: 20,
+      backgroundColor: colors.background,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 20,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      marginBottom: 12,
+      color: colors.text,
+    },
+    label: {
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 4,
+    },
+    labelBold: {
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    example: {
+      marginBottom: 8,
+      color: colors.text,
+    },
+    input: {
+      borderWidth: 2,
+      padding: 10,
+      borderRadius: 10,
+      marginBottom: 12,
+      borderColor: '#FFFFFF',
+      color: colors.text,
+    },
+    textArea: {
+      height: 70,
+      textAlignVertical: 'top',
+    },
+    buttonContainer: {
+      marginBottom: 12,
+    },
+    error: {
+      color: colors.error,
+      marginBottom: 12,
+    },
+    text: {
+      color: colors.text,
+    },
+    nodeText: {
+      fontWeight: 'bold',
+    },
+    titleAST: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginTop: 20,
+      color: colors.text,
+    },
+    highlight: {
+      backgroundColor: colors.highlight,
+    },
+  });

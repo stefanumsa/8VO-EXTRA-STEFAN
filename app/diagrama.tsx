@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, ScrollView, Dimensions } from 'react-native';
+import { View, TextInput, ScrollView, Dimensions, StyleSheet } from 'react-native';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
 import { parse } from 'regexp-tree';
 import Text from '@/features/regexTester/presentation/components/atoms/Text/Text';
 import Button from '@/features/regexTester/presentation/components/atoms/Button/Button';
+import { useAppTheme } from '@/core/hooks/useAppTheme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -68,15 +69,22 @@ function renderNode(
   index: number | string,
   parentX: number | null,
   lines: any[],
-  nodes: any[]
+  nodes: any[],
+  colors: { nodeFill: string; nodeText: string; lineStroke: string }
 ): void {
   const nodeX = x;
   const nodeY = y + level * 100;
 
   nodes.push(
     <React.Fragment key={`node-${index}`}>
-      <Circle cx={nodeX} cy={nodeY} r={25} fill="#aee1f9" />
-      <SvgText x={nodeX} y={nodeY + 5} fontSize="12" fill="black" textAnchor="middle">
+      <Circle cx={nodeX} cy={nodeY} r={25} fill={colors.nodeFill} />
+      <SvgText
+        x={nodeX}
+        y={nodeY + 5}
+        fontSize="12"
+        fill={colors.nodeText}
+        textAnchor="middle"
+      >
         {node.value || node.type}
       </SvgText>
     </React.Fragment>
@@ -90,7 +98,7 @@ function renderNode(
         y1={nodeY - 100}
         x2={nodeX}
         y2={nodeY - 25}
-        stroke="black"
+        stroke={colors.lineStroke}
       />
     );
   }
@@ -100,12 +108,14 @@ function renderNode(
     const totalWidth = (node.children.length - 1) * spacing;
     node.children.forEach((child, i) => {
       const childX = x - totalWidth / 2 + i * spacing;
-      renderNode(child, childX, y + 100, level + 1, `${index}-${i}`, nodeX, lines, nodes);
+      renderNode(child, childX, y + 100, level + 1, `${index}-${i}`, nodeX, lines, nodes, colors);
     });
   }
 }
 
 export default function Diagrama() {
+  const colors = useAppTheme();
+
   const [regex, setRegex] = useState('');
   const [tree, setTree] = useState<NodeData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -132,34 +142,46 @@ export default function Diagrama() {
     setError(null);
   };
 
+  const styles = createStyles(colors);
+
+  // Define colores para SVG segun tema
+  const svgColors = {
+    nodeFill: colors.nodeFill || '#000000',
+    nodeText: colors.text,
+    lineStroke: colors.lineStroke || '#FFFFFF',
+  };
+
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 12 }}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>
         Diagrama Visual de Expresión Regular
       </Text>
 
       <TextInput
         placeholder="Ingresa una expresión regular"
+        placeholderTextColor= "#FFFFFF"
         value={regex}
         onChangeText={setRegex}
-        style={{ borderWidth: 1, padding: 10, borderRadius: 10, marginBottom: 12 }}
+        style={styles.input}
+        
+
       />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+      <View style={styles.buttonsRow}>
         {hasAnyInput && (
-                <View style={{ marginBottom: 12 }}>
-                <Button title="Generar Diagrama." onPress={generarDiagrama} />
-              </View>
-              )}
+          <View style={styles.buttonWrapper}>
+            <Button title="Generar Diagrama." onPress={generarDiagrama} />
+          </View>
+        )}
         {hasAnyInput && (
-                <View style={{ marginBottom: 12 }}>
-                <Button title="Limpiar Campo." onPress={limpiarCampo} />
-              </View>
-              )}
+          <View style={styles.buttonWrapper}>
+            <Button title="Limpiar Campo." onPress={limpiarCampo} />
+          </View>
+        )}
       </View>
 
       {error && (
-        <Text style={{ color: 'red', marginTop: 10, textAlign: 'center' }}>{error}</Text>
+        <Text style={styles.error}>{error}</Text>
       )}
 
       {tree && !error && (
@@ -168,7 +190,7 @@ export default function Diagrama() {
             {(() => {
               const lines: any[] = [];
               const nodes: any[] = [];
-              renderNode(tree, SCREEN_WIDTH, 40, 0, 0, null, lines, nodes);
+              renderNode(tree, SCREEN_WIDTH, 40, 0, 0, null, lines, nodes, svgColors);
               return [...lines, ...nodes];
             })()}
           </Svg>
@@ -177,3 +199,41 @@ export default function Diagrama() {
     </ScrollView>
   );
 }
+
+const createStyles = (colors: any) =>
+  StyleSheet.create({
+    container: {
+      padding: 20,
+      backgroundColor: colors.background,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: 12,
+      color: colors.text,
+    },
+    input: {
+      borderWidth: 2,
+      borderColor: '#FFFFFF',  
+      padding: 10,
+      borderRadius: 10,
+      marginBottom: 12,
+      color: colors.text,
+    },
+    buttonsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 12,
+    },
+    buttonWrapper: {
+      flex: 1,
+      marginHorizontal: 4,
+    },
+    error: {
+      color: colors.error,
+      marginTop: 10,
+      textAlign: 'center',
+    },
+  });
