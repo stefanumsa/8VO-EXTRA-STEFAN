@@ -92,7 +92,7 @@ const createStyles = (colors: any) =>
       marginBottom: 10,
       padding: 10,
       borderRadius: 8,
-      backgroundColor: colors.card, // usa color de tarjeta del tema
+      backgroundColor: colors.card, 
       borderLeftWidth: 4,
       borderLeftColor: colors.primary,
     },

@@ -103,25 +103,21 @@ export default function Tester() {
       </Text>
 
       <Text style={styles.label}>Expresión Regular:</Text>
-      <Text style={styles.example}><Text style={styles.labelBold}>Ejemplo</Text>: \b(\w+)\s+\1\b</Text>
+      <Text style={styles.example}><Text style={styles.labelBold}>Ejemplo</Text>: A[a-z]+[a-z]</Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
-        placeholder="Ejemplo: \b(\w+)\s+\1\b"
-        placeholderTextColor="#FFFFFF"
         style={styles.input}
       />
 
       <Text style={styles.label}>Texto a analizar:</Text>
       <Text style={styles.example}>
-        <Text style={styles.labelBold}>Ejemplo</Text>: Este es un ejemplo para detectar palabras duplicadas en mayuscula.
+        <Text style={styles.labelBold}>Ejemplo</Text>: Esta expresion detecta palabras que empiecen con "A" mayuscula.
       </Text>
       <TextInput
         value={text}
         onChangeText={setText}
-        placeholder="Este es un ejemplo para detectar palabras duplicadas en mayuscula."
         multiline
-        placeholderTextColor="#FFFFFF"
         style={[styles.input, styles.textArea]}
       />
 

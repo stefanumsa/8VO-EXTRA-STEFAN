@@ -144,7 +144,6 @@ export default function Diagrama() {
 
   const styles = createStyles(colors);
 
-  // Define colores para SVG segun tema
   const svgColors = {
     nodeFill: colors.nodeFill || '#000000',
     nodeText: colors.text,
