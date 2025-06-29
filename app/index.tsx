@@ -20,18 +20,18 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.subtitle}>Tester</Text>
+        <Text style={styles.subtitle}>--Tester--</Text>
         <Text style={styles.paragraph}>
           En esta pantalla el usuario puede ingresar una expresión regular y un texto de prueba.
-          Al hacer clic en "Probar Expresion", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}
+          Al hacer clic en "Probar Expresion", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}{'\n'}
         </Text>
 
-        <Text style={styles.subtitle}>Historial</Text>
+        <Text style={styles.subtitle}>--Historial--</Text>
         <Text style={styles.paragraph}>
-          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}
+          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}{'\n'}
         </Text>
 
-        <Text style={styles.subtitle}>Diagrama</Text>
+        <Text style={styles.subtitle}>--Diagrama--</Text>
         <Text style={styles.paragraph}>
           Permite generar un diagrama de ferrocarril a partir de una expresión regular. Este diagrama ayuda a visualizar gráficamente la estructura de la expresión.
         </Text>

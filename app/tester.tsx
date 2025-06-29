@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, ScrollView, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { generateAST } from 'src/core/utils/ast';
+import { generateAST } from '@/core/utils/ast';
 import type { Node } from 'regexpp/ast';
 import Button from "@/features/regexTester/presentation/components/atoms/Button/Button";
 import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
 import { useAppTheme } from '@/core/hooks/useAppTheme';
+import { Platform } from 'react-native';
+
+
 
 export default function Tester() {
   const colors = useAppTheme();
@@ -16,6 +19,30 @@ export default function Tester() {
   const [error, setError] = useState<string | null>(null);
   const [ast, setAST] = useState<Node | null>(null);
 
+  useEffect(() => {
+    try {
+      const re = new RegExp(regex, 'g');
+      const allMatches = [...text.matchAll(re)];
+      setMatches(allMatches);
+      setError(null);
+    } catch (e: any) {
+      setMatches([]);
+      setError('Expresión inválida');
+    }
+  }, [regex, text]);
+
+  const generarAST = () => {
+    try {
+      const tree = generateAST(regex);
+      setAST(tree);
+      saveToHistory(regex);
+      setError(null);
+    } catch (e: any) {
+      setAST(null);
+      setError('No se pudo generar el AST');
+    }
+  };
+
   const saveToHistory = async (pattern: string) => {
     try {
       const existing = await AsyncStorage.getItem('regex_history');
@@ -25,53 +52,41 @@ export default function Tester() {
         await AsyncStorage.setItem('regex_history', JSON.stringify(history.slice(0, 20)));
       }
     } catch (err) {
-      console.error('Error saving history:', err);
-    }
-  };
-
-  const testRegex = () => {
-    try {
-      const re = new RegExp(regex, 'g'); 
-      const allMatches = [...text.matchAll(re)];
-      setMatches(allMatches);
-      setError(null);
-
-      const tree = generateAST(regex);
-      setAST(tree);
-
-      saveToHistory(regex);
-    } catch (e: any) {
-      setError(e.message);
-      setMatches([]);
-      setAST(null);
+      console.error('Error guardando en historial:', err);
     }
   };
 
   const confirmClearFields = () => {
+  if (Platform.OS === 'web') {
+    clearFields();
+  } else {
     Alert.alert(
       '¿Limpiar campos?',
       '¿Estás seguro de que deseas borrar la expresión y el texto?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sí',
-          onPress: () => {
-            setRegex('');
-            setText('');
-            setMatches([]);
-            setAST(null);
-            setError(null);
-          },
-        },
+        { text: 'Sí', onPress: () => clearFields() },
       ]
     );
-  };
+  }
+};
+
+const clearFields = () => {
+  setRegex('');
+  setText('');
+  setMatches([]);
+  setAST(null);
+  setError(null);
+};
+
+
+  const styles = createStyles(colors);
 
   const hasAnyInput = regex.trim() !== '' || text.trim() !== '';
 
-  const InteractiveNode = ({ node, depth = 0 }: { node: Node; depth?: number }): JSX.Element => {
+  const InteractiveNode = ({ node, depth = 0 }: { node: Node; depth?: number }) => {
     const [expanded, setExpanded] = useState(true);
-    const children: Node[] =
+    const children =
       (node as any).elements ||
       (node as any).alternatives ||
       (node as any).expressions ||
@@ -87,57 +102,43 @@ export default function Tester() {
           {expanded ? '▼' : '▶'} {node.type}{' '}
           {'raw' in node && (node as any).raw ? `(${(node as any).raw})` : ''}
         </Text>
-        {expanded && children.map((child, index) => (
+        {expanded && children.map((child: any, index: number) => (
           <InteractiveNode key={index} node={child} depth={depth + 1} />
         ))}
       </View>
     );
   };
 
-  const styles = createStyles(colors);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>
-        Visualizador de Expresiones Regulares
-      </Text>
+      <Text style={styles.title}>Visualizador de Expresiones Regulares</Text>
 
       <Text style={styles.label}>Expresión Regular:</Text>
-      <Text style={styles.example}><Text style={styles.labelBold}>Ejemplo</Text>: A[a-z]+[a-z]</Text>
+      <Text style={styles.label}>Ejemplo: A[a-z]+[a-z]</Text>
+      <Text style={styles.label}>Esta expresion detecta palabras que empiecen con "A" mayuscula. {'\n'}</Text>
       <TextInput
         value={regex}
         onChangeText={setRegex}
         style={styles.input}
+        placeholder="Escribe una expresion regular..."
+        placeholderTextColor={colors.text}
       />
 
       <Text style={styles.label}>Texto a analizar:</Text>
-      <Text style={styles.example}>
-        <Text style={styles.labelBold}>Ejemplo</Text>: Esta expresion detecta palabras que empiecen con "A" mayuscula.
-      </Text>
       <TextInput
         value={text}
         onChangeText={setText}
         multiline
         style={[styles.input, styles.textArea]}
+        placeholder="Escribe un texto..."
+        placeholderTextColor={colors.text}
       />
 
-      {hasAnyInput && (
-        <View style={styles.buttonContainer}>
-          <Button title="Probar expresión" onPress={testRegex} />
-        </View>
-      )}
-
-      {hasAnyInput && (
-        <View style={styles.buttonContainer}>
-          <Button title="Limpiar campos" onPress={confirmClearFields} />
-        </View>
-      )}
-
-      <Text style={styles.label}>Resultado:</Text>
+      <Text style={styles.label}>Resultado: </Text>
       {error ? (
         <Text style={styles.error}>{error}</Text>
       ) : matches.length === 0 ? (
-        <Text style={[styles.text, { color: '#000000' }]}>No hay coincidencias.</Text>
+        <Text style={[styles.text, { color: '#000000' }]}>No hay coincidencias. </Text>
       ) : (
         <Text style={[styles.text, { color: '#000000' }]}>
           {text.split('').map((char, i) => {
@@ -162,11 +163,21 @@ export default function Tester() {
         </Text>
       )}
 
+      {hasAnyInput && (
+        <View style={styles.buttonContainer}>
+          <Button title="Generar AST" onPress={generarAST} />
+        </View>
+      )}
+
+      {hasAnyInput && (
+        <View style={styles.buttonContainer}>
+          <Button title="Limpiar campos" onPress={confirmClearFields} />
+        </View>
+      )}
+
       {ast && (
         <>
-          <Text style={styles.titleAST}>
-            Árbol de Sintaxis Abstracta (AST):
-          </Text>
+          <Text style={styles.titleAST}>Árbol de Sintaxis Abstracta (AST):</Text>
           <View style={{ paddingTop: 10 }}>
             <InteractiveNode node={ast} />
           </View>
@@ -195,20 +206,12 @@ const createStyles = (colors: any) =>
       color: colors.text,
       marginBottom: 4,
     },
-    labelBold: {
-      fontWeight: 'bold',
-      color: colors.text,
-    },
-    example: {
-      marginBottom: 8,
-      color: colors.text,
-    },
     input: {
       borderWidth: 2,
       padding: 10,
       borderRadius: 10,
       marginBottom: 12,
-      borderColor: '#FFFFFF',
+      borderColor: colors.text,
       color: colors.text,
     },
     textArea: {
@@ -223,7 +226,7 @@ const createStyles = (colors: any) =>
       marginBottom: 12,
     },
     text: {
-      color: colors.text,
+      flexWrap: 'wrap',
     },
     nodeText: {
       fontWeight: 'bold',
@@ -233,8 +236,5 @@ const createStyles = (colors: any) =>
       textAlign: 'center',
       marginTop: 20,
       color: colors.text,
-    },
-    highlight: {
-      backgroundColor: colors.highlight,
     },
   });
