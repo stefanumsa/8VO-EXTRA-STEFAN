@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { View, TextInput, ScrollView, Dimensions, StyleSheet } from 'react-native';
 import Svg, { Circle, Line, Text as SvgText } from 'react-native-svg';
-import { parse } from 'regexp-tree';
+import { parse } from 'regexp-tree'; // Librería para generar el AST de una expresión regular
 import Text from '@/features/regexTester/presentation/components/atoms/Text/Text';
 import Button from '@/features/regexTester/presentation/components/atoms/Button/Button';
 import { useAppTheme } from '@/core/hooks/useAppTheme';
 
+// Obtiene el ancho de pantalla para usarlo en el renderizado SVG
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+// Tipado personalizado para los nodos del AST
 interface NodeData {
   type: string;
   value?: string;
   children?: NodeData[];
 }
 
+// Transforma el AST original de regexp-tree a un formato simplificado que usamos para dibujar
 function transformAST(node: any): NodeData {
   if (!node) return { type: 'null' };
 
@@ -27,6 +30,7 @@ function transformAST(node: any): NodeData {
         value: `[${node.expressions.map((e: any) => e.raw).join('')}]`
       };
 
+    // Tipos de nodos complejos que pueden contener hijos
     case 'Alternative':
     case 'Disjunction':
     case 'Group':
@@ -55,12 +59,14 @@ function transformAST(node: any): NodeData {
     case 'Anchor':
       return { type: 'Anchor', value: node.kind };
 
+    // Muestra advertencia si se encuentra un tipo no controlado
     default:
       console.warn(`Tipo de nodo no manejado: ${node.type}`);
       return { type: node.type };
   }
 }
 
+// Dibuja de forma recursiva los nodos del AST como círculos conectados con líneas
 function renderNode(
   node: NodeData,
   x: number,
@@ -75,6 +81,7 @@ function renderNode(
   const nodeX = x;
   const nodeY = y + level * 100;
 
+  // Dibuja el nodo actual
   nodes.push(
     <React.Fragment key={`node-${index}`}>
       <Circle cx={nodeX} cy={nodeY} r={25} fill={colors.nodeFill} />
@@ -90,6 +97,7 @@ function renderNode(
     </React.Fragment>
   );
 
+  // Dibuja línea desde el padre, si existe
   if (parentX !== null) {
     lines.push(
       <Line
@@ -103,6 +111,7 @@ function renderNode(
     );
   }
 
+  // Llama recursivamente a los hijos del nodo actual
   if (node.children) {
     const spacing = 120;
     const totalWidth = (node.children.length - 1) * spacing;
@@ -113,15 +122,17 @@ function renderNode(
   }
 }
 
+// Componente principal de la pantalla que muestra el input y diagrama SVG
 export default function Diagrama() {
-  const colors = useAppTheme();
+  const colors = useAppTheme(); // Obtiene colores según el tema
 
-  const [regex, setRegex] = useState('');
-  const [tree, setTree] = useState<NodeData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [regex, setRegex] = useState(''); // Valor del input de expresión regular
+  const [tree, setTree] = useState<NodeData | null>(null); // AST generado
+  const [error, setError] = useState<string | null>(null); // Mensaje de error si ocurre
 
-  const hasAnyInput = regex.trim() !== '';
+  const hasAnyInput = regex.trim() !== ''; // Verifica si hay algo escrito
 
+  // Genera el AST desde la expresión escrita y lo transforma para visualización
   const generarDiagrama = () => {
     try {
       const safeRegex = regex.startsWith('/') ? regex : `/${regex}/`;
@@ -136,6 +147,7 @@ export default function Diagrama() {
     }
   };
 
+  // Limpia todo el estado (input, AST, errores)
   const limpiarCampo = () => {
     setRegex('');
     setTree(null);
@@ -144,6 +156,7 @@ export default function Diagrama() {
 
   const styles = createStyles(colors);
 
+  // Colores para nodos y líneas SVG
   const svgColors = {
     nodeFill: colors.nodeFill || '#000000',
     nodeText: colors.text,
@@ -158,14 +171,13 @@ export default function Diagrama() {
 
       <TextInput
         placeholder="Ingresa una expresión regular"
-        placeholderTextColor= "#FFFFFF"
+        placeholderTextColor="#FFFFFF"
         value={regex}
         onChangeText={setRegex}
         style={styles.input}
-        
-
       />
 
+      {/* Botones para generar o limpiar */}
       <View style={styles.buttonsRow}>
         {hasAnyInput && (
           <View style={styles.buttonWrapper}>
@@ -179,10 +191,12 @@ export default function Diagrama() {
         )}
       </View>
 
+      {/* Mensaje de error si ocurre */}
       {error && (
         <Text style={styles.error}>{error}</Text>
       )}
 
+      {/* Renderiza el SVG solo si hay árbol y no hay error */}
       {tree && !error && (
         <ScrollView horizontal style={{ marginTop: 20 }}>
           <Svg height={600} width={SCREEN_WIDTH * 2}>
@@ -199,6 +213,7 @@ export default function Diagrama() {
   );
 }
 
+// Estilos con colores dinámicos según tema
 const createStyles = (colors: any) =>
   StyleSheet.create({
     container: {

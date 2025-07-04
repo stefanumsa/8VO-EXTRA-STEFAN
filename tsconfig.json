@@ -1,19 +1,34 @@
 {
   "compilerOptions": {
+    // Activa todas las opciones estrictas de TypeScript para mayor seguridad de tipos
     "strict": true,
+
+    // Establece la raíz base para resolver módulos relativos
     "baseUrl": ".",
+
+    // Alias para rutas: "@" apunta a "src/"
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
+
+    // Incluye los tipos para React y React Native para soporte en TS
     "types": [
       "react",
       "react-native"
     ],
+
+    // Configura JSX para React Native
     "jsx": "react-native",
+
+    // Permite interoperabilidad entre módulos CommonJS y ES Modules
     "esModuleInterop": true,
+
+    // Permite importar módulos con export default aunque no tengan uno explícito
     "allowSyntheticDefaultImports": true
   },
+
+  // Extiende la configuración base de Expo para TypeScript
   "extends": "expo/tsconfig.base"
 }
