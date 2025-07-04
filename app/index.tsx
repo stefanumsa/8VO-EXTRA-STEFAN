@@ -1,11 +1,15 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
-import { useAppTheme } from '@/core/hooks/useAppTheme';
+import { ScrollView, View, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
+import Text from "@/features/regexTester/presentation/components/atoms/Text/Text"; // Componente atómico personalizado
+import { useAppTheme } from '@/core/hooks/useAppTheme'; // Hook que obtiene el tema actual (claro/oscuro)
 
-export default function HomeScreen() {
-  const colors = useAppTheme();
-  const styles = createStyles(colors);
+/**
+ * Componente principal de la pantalla de bienvenida.
+ * Muestra una introducción general y explica la funcionalidad de cada pestaña de la app.
+ */
+export default function HomeScreen(): JSX.Element {
+  const colors = useAppTheme();               // Hook que retorna los colores activos del tema
+  const styles = createStyles(colors);        // Estilos dinámicos basados en el tema
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -23,24 +27,40 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>--Tester--</Text>
         <Text style={styles.paragraph}>
           En esta pantalla el usuario puede ingresar una expresión regular y un texto de prueba.
-          Al hacer clic en "Probar Expresion", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}{'\n'}
+          Al hacer clic en "Probar Expresión", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}{'\n'}
         </Text>
 
         <Text style={styles.subtitle}>--Historial--</Text>
         <Text style={styles.paragraph}>
-          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}{'\n'}
+          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. 
+          Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}{'\n'}
         </Text>
 
         <Text style={styles.subtitle}>--Diagrama--</Text>
         <Text style={styles.paragraph}>
-          Permite generar un diagrama de ferrocarril a partir de una expresión regular. Este diagrama ayuda a visualizar gráficamente la estructura de la expresión.
+          Permite generar un diagrama de ferrocarril a partir de una expresión regular. 
+          Este diagrama ayuda a visualizar gráficamente la estructura de la expresión.
         </Text>
       </View>
     </ScrollView>
   );
 }
 
-const createStyles = (colors: any) =>
+//Función para generar estilos dinámicos según el tema actual.
+ 
+const createStyles = (colors: {
+  background: string;
+  card: string;
+  text: string;
+}): {
+  container: StyleProp<ViewStyle>;
+  card: StyleProp<ViewStyle>;
+  paragraph: StyleProp<TextStyle>;
+  bold: StyleProp<TextStyle>;
+  italic: StyleProp<TextStyle>;
+  section: StyleProp<ViewStyle>;
+  subtitle: StyleProp<TextStyle>;
+} =>
   StyleSheet.create({
     container: {
       flexGrow: 1,
