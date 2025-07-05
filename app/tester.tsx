@@ -201,25 +201,25 @@ export default function Tester() {
   </Text>
 )}
       <View style={styles.buttonContainer}>
-        <Button title="Cargar Ejemplo" onPress={cargarEjemplo} />
+        <Button title="Probar con ejemplo" onPress={cargarEjemplo} />
       </View>
 
       {hasAnyInput && (
         <View style={styles.buttonContainer}>
-          <Button title="Generar AST" onPress={generarAST} />
+          <Button title="Generar árbol AST" onPress={generarAST} />
         </View>
       )}
 
       {hasAnyInput && (
         <View style={styles.buttonContainer}>
-          <Button title="Limpiar campos" onPress={confirmClearFields} />
+          <Button title="Borrar expresión y texto" onPress={confirmClearFields} />
         </View>
       )}
 
       {ast && (
         <>
           <Text style={styles.titleAST}>Árbol de Sintaxis Abstracta (AST):</Text>
-          <View style={{ paddingTop: 10 }}>
+          <View style={{ paddingTop: 15 }}>
             <InteractiveNode node={ast} />
           </View>
         </>
