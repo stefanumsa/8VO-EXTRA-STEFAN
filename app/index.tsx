@@ -1,109 +1,122 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
-import Text from "@/features/regexTester/presentation/components/atoms/Text/Text"; // Componente atómico personalizado
-import { useAppTheme } from '@/core/hooks/useAppTheme'; // Hook que obtiene el tema actual (claro/oscuro)
+import { ScrollView, View, StyleSheet, StyleProp, ViewStyle, TextStyle, TouchableOpacity } from 'react-native';
+import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
+import { useAppTheme } from '@/core/hooks/useAppTheme';
+import Card from "@/features/regexTester/presentation/components/atoms/Card/Card";
 
-/**
- * Componente principal de la pantalla de bienvenida.
- * Muestra una introducción general y explica la funcionalidad de cada pestaña de la app.
- */
+
 export default function HomeScreen(): JSX.Element {
-  const colors = useAppTheme();               // Hook que retorna los colores activos del tema
-  const styles = createStyles(colors);        // Estilos dinámicos basados en el tema
+  const colors = useAppTheme();
+  const styles = createStyles(colors);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>¡Bienvenido a 8VO-EXTRA-STEFAN!</Text>
+
       <View style={styles.card}>
         <Text style={styles.paragraph}>
           Esta aplicación fue creada por{' '}
           <Text style={styles.bold}>Stefan Oebels Sánchez</Text>.{'\n'}
-          Certificación de Software - Extraordinario.{'\n'}
-          Si da click en el apartado de{' '}
-          <Text style={styles.italic}>"Página Principal"</Text>, podrá acceder a las diferentes pestañas. 
+          Certificación de Software - Extraordinario.
         </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.subtitle}>--Tester--</Text>
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>🔍 Tester</Text>
         <Text style={styles.paragraph}>
-          En esta pantalla el usuario puede ingresar una expresión regular y un texto de prueba.
-          Al hacer clic en "Probar Expresión", se mostrarán las coincidencias encontradas junto con el árbol de sintaxis abstracta (AST) generado.{'\n'}{'\n'}
-        </Text>
-
-        <Text style={styles.subtitle}>--Historial--</Text>
-        <Text style={styles.paragraph}>
-          Aquí se mostrarán todas las expresiones regulares que el usuario ha utilizado. 
-          Se puede consultar el historial completo o eliminarlo si se desea. {'\n'}{'\n'}
-        </Text>
-
-        <Text style={styles.subtitle}>--Diagrama--</Text>
-        <Text style={styles.paragraph}>
-          Permite generar un diagrama de ferrocarril a partir de una expresión regular. 
-          Este diagrama ayuda a visualizar gráficamente la estructura de la expresión.
+          Aquí puedes ingresar una expresión regular y un texto para probarla en tiempo real.
+          Al presionar <Text style={styles.bold}>"Generar AST"</Text>, verás el árbol de sintaxis abstracta (AST) y tendras acceso a informacion sobre los <Text style={styles.bold}>"Tokens"</Text> .
         </Text>
       </View>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>📜 Historial</Text>
+        <Text style={styles.paragraph}>
+          Consulta todas las expresiones que has usado anteriormente.
+          Puedes eliminar el historial si quieres empezar desde cero.
+        </Text>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>📈 Diagrama</Text>
+        <Text style={styles.paragraph}>
+          Genera diagramas de ferrocarril para visualizar la estructura de tus expresiones regulares de forma gráfica.
+        </Text>
+      </View>
+
+      
     </ScrollView>
   );
 }
 
-//Función para generar estilos dinámicos según el tema actual.
- 
 const createStyles = (colors: {
   background: string;
   card: string;
   text: string;
+  primary: string;
 }): {
   container: StyleProp<ViewStyle>;
+  title: StyleProp<TextStyle>;
   card: StyleProp<ViewStyle>;
   paragraph: StyleProp<TextStyle>;
   bold: StyleProp<TextStyle>;
-  italic: StyleProp<TextStyle>;
-  section: StyleProp<ViewStyle>;
-  subtitle: StyleProp<TextStyle>;
+  sectionTitle: StyleProp<TextStyle>;
+  button: StyleProp<ViewStyle>;
+  buttonText: StyleProp<TextStyle>;
 } =>
   StyleSheet.create({
     container: {
       flexGrow: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       padding: 24,
       backgroundColor: colors.background,
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      marginBottom: 24,
+      color: colors.text,
+      textAlign: 'center',
     },
     card: {
       backgroundColor: colors.card,
-      padding: 24,
-      borderRadius: 12,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.5,
+      padding: 20,
+      borderRadius: 15,
+      shadowColor: '#808080',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.2,
       shadowRadius: 6,
-      elevation: 3,
+      elevation: 4,
+      width: '100%',
       maxWidth: 480,
-      marginBottom: 24,
+      marginBottom: 20,
     },
     paragraph: {
-      textAlign: 'center',
-      fontSize: 18,
-      fontWeight: '600',
+      fontSize: 16,
       color: colors.text,
-      lineHeight: 26,
+      lineHeight: 22,
+      textAlign: 'justify',
     },
     bold: {
       fontWeight: 'bold',
       color: colors.text,
     },
-    italic: {
-      fontStyle: 'italic',
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      marginBottom: 10,
       color: colors.text,
     },
-    section: {
-      width: '100%',
-      maxWidth: 480,
+    button: {
+      marginTop: 10,
+      paddingVertical: 14,
+      paddingHorizontal: 40,
+      borderRadius: 30,
+      elevation: 3,
     },
-    subtitle: {
-      fontSize: 16,
+    buttonText: {
+      fontSize: 18,
       fontWeight: 'bold',
-      marginBottom: 8,
-      color: colors.text,
+      textAlign: 'center',
     },
   });

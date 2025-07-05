@@ -10,13 +10,16 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
+      backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 15,
+      shadowColor: '#808080',
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+      elevation: 4,
+      width: '100%',
+      maxWidth: 480,
+      marginBottom: 20,
+    },
 });

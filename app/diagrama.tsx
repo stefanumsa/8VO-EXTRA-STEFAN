@@ -158,9 +158,9 @@ export default function Diagrama() {
 
   // Colores para nodos y líneas SVG
   const svgColors = {
-    nodeFill: colors.nodeFill || '#000000',
+    nodeFill: colors.nodeFill || '#6a7f9d',
     nodeText: colors.text,
-    lineStroke: colors.lineStroke || '#FFFFFF',
+    lineStroke: colors.lineStroke || '#2c3e50',
   };
 
   return (
@@ -171,7 +171,7 @@ export default function Diagrama() {
 
       <TextInput
         placeholder="Ingresa una expresión regular"
-        placeholderTextColor="#FFFFFF"
+        placeholderTextColor={colors.text}
         value={regex}
         onChangeText={setRegex}
         style={styles.input}
@@ -230,10 +230,10 @@ const createStyles = (colors: any) =>
     },
     input: {
       borderWidth: 2,
-      borderColor: '#FFFFFF',  
       padding: 10,
       borderRadius: 10,
       marginBottom: 12,
+      borderColor: colors.text,
       color: colors.text,
     },
     buttonsRow: {

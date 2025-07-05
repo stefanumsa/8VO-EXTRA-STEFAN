@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-
 import Button from "@/features/regexTester/presentation/components/atoms/Button/Button";
 import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
 import { useAppTheme } from '@/core/hooks/useAppTheme';
