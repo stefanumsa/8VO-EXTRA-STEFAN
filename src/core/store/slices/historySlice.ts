@@ -6,6 +6,7 @@ type HistoryState = {
   history: string[];
   addToHistory: (regex: string) => void;
   clearHistory: () => void;
+  removeFromHistory: (index: number) => void; // ✅ NUEVA función
 };
 
 const customStorage: PersistStorage<HistoryState> = {
@@ -35,6 +36,10 @@ export const useHistoryStore = create<HistoryState>()(
           history: [regex, ...state.history.filter((r) => r !== regex)],
         })),
       clearHistory: () => set({ history: [] }),
+      removeFromHistory: (index) => // ✅ NUEVA implementación
+        set((state) => ({
+          history: state.history.filter((_, i) => i !== index),
+        })),
     }),
     {
       name: 'regex-history',

@@ -64,6 +64,7 @@ function DrawerLayout(): JSX.Element {
         <Drawer.Screen name="tester" options={{ title: 'Tester' }} />
         <Drawer.Screen name="history" options={{ title: 'Historial' }} />
         <Drawer.Screen name="diagrama" options={{ title: 'Diagrama' }} />
+        <Drawer.Screen name="ast" options={{ title: 'AST' }} />
       </Drawer>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { View, TextInput, ScrollView, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg from 'react-native-svg';
 import { parse } from 'regexp-tree';
 import SvgPanZoom from 'react-native-svg-pan-zoom';
@@ -8,6 +8,7 @@ import { NodeData } from '@/features/regexTester/presentation/components/Diagram
 import Text from '@/features/regexTester/presentation/components/atoms/Text/Text';
 import Button from '@/features/regexTester/presentation/components/atoms/Button/Button';
 import { useAppTheme } from '@/core/hooks/useAppTheme';
+import { useRouter } from 'expo-router';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -54,6 +55,7 @@ function transformAST(node: any): NodeData {
 
 export default function Diagrama() {
   const colors = useAppTheme();
+  const router = useRouter();
   const [regex, setRegex] = useState('');
   const [tree, setTree] = useState<NodeData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,9 +92,14 @@ export default function Diagrama() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>
-        Diagrama Visual de Expresión Regular
-      </Text>
+      <Text style={styles.title}>📈Diagrama Visual de Expresión Regular📈</Text>
+
+      <TouchableOpacity
+        onPress={() => router.push('/tester')}
+        style={[styles.backButton, { backgroundColor: colors.primary }]}
+      >
+        <Text style={[styles.backButtonText, { color: colors.text }]}>Ir al Tester</Text>
+      </TouchableOpacity>
 
       <TextInput
         placeholder="Ingresa una expresión regular"
@@ -115,9 +122,7 @@ export default function Diagrama() {
         )}
       </View>
 
-      {error && (
-        <Text style={styles.error}>{error}</Text>
-      )}
+      {error && <Text style={styles.error}>{error}</Text>}
 
       {tree && !error && (
         <View style={{ height: 600, marginTop: 20 }}>
@@ -182,5 +187,18 @@ const createStyles = (colors: any) =>
       color: colors.error,
       marginTop: 10,
       textAlign: 'center',
+    },
+    backButton: {
+      marginTop: 20,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+      borderRadius: 30,
+      elevation: 5,
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    backButtonText: {
+      fontWeight: 'bold',
+      fontSize: 16,
     },
   });

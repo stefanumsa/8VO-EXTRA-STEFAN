@@ -12,13 +12,18 @@ import { darkColors, lightColors } from '@/core/theme/colors';
 import { useHistoryStore } from '@/core/store';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { router } from 'expo-router';
+import { useASTStore } from '@/core/store/astStore';
+
+
+
 
 export default function Tester() {
   const colors = useAppTheme();
   const isDark = useSelector((state: RootState) => state.theme.isDarkMode);
   const theme = isDark ? darkColors : lightColors;
   const { history, addToHistory, clearHistory } = useHistoryStore();
-
+  const [showASTModal, setShowASTModal] = useState(false);
   const [showTokenInfo, setShowTokenInfo] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [regex, setRegex] = useState('');
@@ -27,6 +32,9 @@ export default function Tester() {
   const [matches, setMatches] = useState<RegExpMatchArray[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [ast, setAST] = useState<Node | null>(null);
+  const { astList } = useASTStore();
+  
+
 
   const examples = [
     {
@@ -62,23 +70,40 @@ export default function Tester() {
     }
   }, [regex, text]);
 
-  const generarAST = () => {
-    try {
-      const tree = generateAST(regex);
-      setAST(tree);
-      addToHistory(regex);
-      setError(null);
-    } catch {
-      setAST(null);
-      setError('No se pudo generar el AST');
-    }
-  };
+  const { addAST } = useASTStore();
+
+const generarAST = () => {
+  try {
+    const tree = generateAST(regex);
+    setAST(tree);
+    addToHistory(regex);
+
+    // Guardar en el store Zustand
+    addAST({ regex, ast: tree });
+
+    setError(null);
+
+    Alert.alert('AST generado', 'El AST se generó con éxito.', [
+      {
+        text: 'Ver AST',
+        onPress: () => router.push('/ast'), // Navegar a la pestaña AST
+      },
+      {
+        text: 'Cerrar',
+        style: 'cancel',
+      },
+    ]);
+  } catch {
+    setAST(null);
+    setError('No se pudo generar el AST');
+  }
+};
 
   const confirmClearFields = () => {
     if (Platform.OS === 'web') {
       clearFields();
     } else {
-      Alert.alert('¿Limpiar campos?', '¿Estás seguro?', [
+      Alert.alert('¿Limpiar campos?', '¿Estás seguro que deseas limpiar los campos?', [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Sí', onPress: clearFields },
       ]);
@@ -180,23 +205,31 @@ export default function Tester() {
 
 return (
   <ScrollView contentContainerStyle={styles.container}>
-    <Text style={styles.title}>Tester de Expresiones Regulares</Text>
+    <Text style={styles.title}>🔍Tester de Expresiones Regulares🔍</Text>
 
     <View style={{ flexDirection: 'row', gap: 10 }}>
-      <TouchableOpacity
-        onPress={() => setShowTokenInfo(true)}
-        style={[styles.infoButton, { backgroundColor: colors.primary }]}
-      >
-        <RNText style={[styles.infoButtonText, { color: colors.text }]}>❓</RNText>
-      </TouchableOpacity>
+  <TouchableOpacity
+    onPress={() => setShowTokenInfo(true)}
+    style={[styles.infoButton, { backgroundColor: colors.primary }]}
+  >
+    <RNText style={[styles.infoButtonText, { color: colors.text }]}>❓</RNText>
+  </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => setShowHistoryModal(true)}
-        style={[styles.infoButton, { backgroundColor: colors.primary }]}
-      >
-        <RNText style={[styles.infoButtonText, { color: colors.text }]}>📜</RNText>
-      </TouchableOpacity>
-    </View>
+  <TouchableOpacity
+    onPress={() => setShowHistoryModal(true)}
+    style={[styles.infoButton, { backgroundColor: colors.primary }]}
+  >
+    <RNText style={[styles.infoButtonText, { color: colors.text }]}>📜</RNText>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+  onPress={() => router.push('/ast')}
+  style={[styles.infoButton, { backgroundColor: colors.primary }]}
+>
+  <RNText style={[styles.infoButtonText, { color: colors.text }]}>🌲</RNText>
+</TouchableOpacity>
+</View>
+
 
     <Text style={styles.label}>Expresión Regular:</Text>
     <TextInput
@@ -242,7 +275,7 @@ return (
     )}
 
     <View style={styles.buttonContainer}>
-      <Button title="Probar con ejemplo" onPress={cargarEjemplo} />
+      <Button title="Probar con un ejemplo" onPress={cargarEjemplo} />
     </View>
 
     {hasAnyInput && (
@@ -346,6 +379,8 @@ return (
         </TouchableOpacity>
       </View>
     </Modal>
+
+    
   </ScrollView>
 );
 

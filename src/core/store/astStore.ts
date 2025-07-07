@@ -1,22 +1,40 @@
 import { create } from 'zustand';
-import type { Node } from 'regexpp/ast';
 
-interface ASTEntry {
+type ASTItem = {
   regex: string;
-  ast: Node;
-}
+  ast: any;
+};
 
-interface ASTStore {
-  astList: ASTEntry[];
-  addAST: (entry: ASTEntry) => void;
-  clearASTs: () => void;
-}
+type ASTState = {
+  astList: ASTItem[];
+  astHistory: ASTItem[];
+  addAST: (item: ASTItem) => void;
+  removeAST: (regex: string) => void; 
+  clearASTHistory: () => void;
+};
 
-export const useASTStore = create<ASTStore>((set) => ({
+export const useASTStore = create<ASTState>((set, get) => ({
   astList: [],
-  addAST: (entry) =>
-    set((state) => ({
-      astList: [entry, ...state.astList],
-    })),
-  clearASTs: () => set({ astList: [] }),
+  astHistory: [],
+
+  addAST: (item) => {
+    const currentHistory = get().astHistory;
+    const alreadyExists = currentHistory.some((ast) => ast.regex === item.regex);
+
+    if (!alreadyExists) {
+      set({
+        astHistory: [...currentHistory, item],
+        astList: [...get().astList, item],
+      });
+    }
+  },
+
+  //  Función para eliminar un solo AST por regex
+  removeAST: (regex) => {
+    const newHistory = get().astHistory.filter((entry) => entry.regex !== regex);
+    const newList = get().astList.filter((entry) => entry.regex !== regex);
+    set({ astHistory: newHistory, astList: newList });
+  },
+
+  clearASTHistory: () => set({ astHistory: [], astList: [] }),
 }));
