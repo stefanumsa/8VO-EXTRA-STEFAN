@@ -2,11 +2,18 @@ import { create } from 'zustand';
 import { persist, PersistStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export type HistoryItem = {
+  regex: string;
+  text: string;
+  result: string;
+  timestamp: number; // <-- nuevo campo timestamp
+};
+
 type HistoryState = {
-  history: string[];
-  addToHistory: (regex: string) => void;
+  history: HistoryItem[];
+  addToHistory: (item: Omit<HistoryItem, 'timestamp'>) => void;
   clearHistory: () => void;
-  removeFromHistory: (index: number) => void; // ✅ NUEVA función
+  removeFromHistory: (index: number) => void;
 };
 
 const customStorage: PersistStorage<HistoryState> = {
@@ -31,12 +38,18 @@ export const useHistoryStore = create<HistoryState>()(
   persist(
     (set) => ({
       history: [],
-      addToHistory: (regex) =>
-        set((state) => ({
-          history: [regex, ...state.history.filter((r) => r !== regex)],
-        })),
+      addToHistory: (item) =>
+        set((state) => {
+          const newItem = { ...item, timestamp: Date.now() };
+          const filtered = state.history.filter(
+            (h) => !(h.regex === newItem.regex && h.text === newItem.text)
+          );
+          return {
+            history: [newItem, ...filtered].sort((a, b) => b.timestamp - a.timestamp),
+          };
+        }),
       clearHistory: () => set({ history: [] }),
-      removeFromHistory: (index) => // ✅ NUEVA implementación
+      removeFromHistory: (index) =>
         set((state) => ({
           history: state.history.filter((_, i) => i !== index),
         })),

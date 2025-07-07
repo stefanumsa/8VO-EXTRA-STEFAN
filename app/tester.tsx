@@ -76,7 +76,13 @@ const generarAST = () => {
   try {
     const tree = generateAST(regex);
     setAST(tree);
-    addToHistory(regex);
+   addToHistory({
+  regex,
+  text,
+  result: matches.map((m) => m[0]).join(', '),
+  timestamp: new Date().toISOString(),
+});
+
 
     // Guardar en el store Zustand
     addAST({ regex, ast: tree });
