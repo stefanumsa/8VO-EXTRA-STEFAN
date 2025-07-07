@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'; // Importa la función principal para configurar el store de Redux Toolkit
 import themeReducer from './slices/themeSlice'; // Importa el reducer del slice de tema (modo claro/oscuro)
+export * from './slices/historySlice';
+
 
 // Crea y exporta el store de Redux, registrando el slice de 'theme'
 export const store = configureStore({

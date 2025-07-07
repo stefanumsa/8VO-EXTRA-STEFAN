@@ -2,7 +2,6 @@ import React from 'react';
 import { ScrollView, View, StyleSheet, StyleProp, ViewStyle, TextStyle, TouchableOpacity } from 'react-native';
 import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
 import { useAppTheme } from '@/core/hooks/useAppTheme';
-import Card from "@/features/regexTester/presentation/components/atoms/Card/Card";
 
 
 export default function HomeScreen(): JSX.Element {
