@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 30,
-    elevation: 5,          // Sombra para Android
+    elevation: 5,          
     alignItems: 'center',  // Centra el texto horizontalmente
   },
   text: {

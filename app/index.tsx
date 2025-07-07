@@ -25,7 +25,7 @@ export default function HomeScreen(): JSX.Element {
         <Text style={styles.sectionTitle}>🔍 Tester</Text>
         <Text style={styles.paragraph}>
           Aquí puedes ingresar una expresión regular y un texto para probarla en tiempo real.
-          Al presionar <Text style={styles.bold}>"Generar AST"</Text>, verás el árbol de sintaxis abstracta (AST) y tendras acceso a informacion sobre los <Text style={styles.bold}>"Tokens"</Text> .
+          Al presionar <Text style={styles.bold}>"Generar árbol AST"</Text>, verás el árbol de sintaxis abstracta (AST) y tendras acceso a informacion sobre los <Text style={styles.bold}>"Tokens"</Text> .
         </Text>
       </View>
 
