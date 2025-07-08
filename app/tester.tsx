@@ -80,8 +80,9 @@ const generarAST = () => {
   regex,
   text,
   result: matches.map((m) => m[0]).join(', '),
-  timestamp: new Date().toISOString(),
+  timestamp: new Date().toISOString(), 
 });
+
 
 
     // Guardar en el store Zustand
@@ -222,11 +223,11 @@ return (
   </TouchableOpacity>
 
   <TouchableOpacity
-    onPress={() => setShowHistoryModal(true)}
-    style={[styles.infoButton, { backgroundColor: colors.primary }]}
-  >
-    <RNText style={[styles.infoButtonText, { color: colors.text }]}>📜</RNText>
-  </TouchableOpacity>
+  onPress={() => router.push('/history')}
+  style={[styles.infoButton, { backgroundColor: colors.primary }]}
+>
+  <RNText style={[styles.infoButtonText, { color: colors.text }]}>📜</RNText>
+</TouchableOpacity>
 
   <TouchableOpacity
   onPress={() => router.push('/ast')}
@@ -318,38 +319,43 @@ return (
       <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={[styles.modalTitle, { color: colors.text }]}>
-            Explicación de Tokens en Expresiones Regulares
+            Explicación de Expresiones Regulares
           </Text>
 
           <Text style={[styles.modalText, { color: colors.text }]}>
             <Text style={{ fontWeight: 'bold', color: colors.text }}>Definición Formal:</Text>
             {'\n'}
-            Un token es la unidad mínima que representa un significado léxico en la expresión regular, como un carácter simple, un metacarácter, un cuantificador, etc.
-            {'\n\n'}
+             Una expresión regular (regex o regexp) es una secuencia de caracteres que define un patrón de búsqueda. Se utiliza para encontrar, validar, o manipular cadenas de texto basándose en ese patrón.            {'\n\n'}
 
             <Text style={{ fontWeight: 'bold', color: colors.text }}>Ejemplos Detallados:</Text>
             {'\n'}
-            - Caracteres literales: a, b, 1
+            - b[aeiou]bble	
             {'\n'}
-            - Metacaracteres: ., *, +, ?
+            - go*gle
             {'\n'}
-            - Clases de caracteres: [a-z], {'\\d'}, {'\\w'}
+            - colou?r
             {'\n'}
-            - Cuantificadores: {'{1,3}'}, +, *
+            - gray|grey	
             {'\n'}
-            - Grupos: (abc), (?:xyz)
+            - hello
             {'\n'}
-            - Anclas: ^, $
+            - [b-chm-pP]at|ot 
             {'\n\n'}
 
             <Text style={{ fontWeight: 'bold', color: colors.text }}>Como se Usan:</Text>
             {'\n'}
-            Estos tokens se combinan para formar patrones complejos que permiten buscar, validar y manipular texto de manera poderosa y flexible.
-            {'\n\n'}
+             Las expresiones regulares son patrones que se usan para buscar, validar o manipular texto. Primero defines un patrón que describe lo que quieres encontrar (como números, letras o símbolos), y luego aplicas ese patrón sobre un texto para comprobar si coincide, extraer partes específicas o reemplazar contenido.            {'\n\n'}
 
             <Text style={{ fontWeight: 'bold', color: colors.text }}>Importancia:</Text>
             {'\n'}
-            Conocer los tokens es fundamental para construir y entender expresiones regulares correctamente, además de interpretar el Árbol de Sintaxis Abstracta (AST) que representa la estructura de la expresión.
+            - Validar entradas de usuario (emails, contraseñas, teléfonos, etc.).	
+            {'\n'}
+            - Buscar y extraer datos en texto (números, palabras clave).
+            {'\n'}
+            - Reemplazar palabras/patrones en texto.
+            {'\n'}
+            Dividir cadenas de texto.
+
           </Text>
         </ScrollView>
 
@@ -362,29 +368,7 @@ return (
       </View>
     </Modal>
 
-    {/* MODAL HISTORIAL */}
-    <Modal visible={showHistoryModal} animationType="slide" onRequestClose={() => setShowHistoryModal(false)}>
-      <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <Text style={[styles.modalTitle, { color: colors.text }]}>📜 Historial de expresiones</Text>
-          {history.length === 0 ? (
-            <Text style={styles.noHistoryText}>No hay expresiones guardadas aún.</Text>
-          ) : (
-            history.map((item, index) => (
-              <View key={index} style={styles.itemContainer}>
-                <Text style={styles.itemText}>{item}</Text>
-              </View>
-            ))
-          )}
-        </ScrollView>
-        <TouchableOpacity
-          style={[styles.modalCloseButton, { backgroundColor: colors.primary }]}
-          onPress={() => setShowHistoryModal(false)}
-        >
-          <Text style={[styles.modalCloseButtonText, { color: colors.text }]}>Cerrar</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+    
 
     
   </ScrollView>

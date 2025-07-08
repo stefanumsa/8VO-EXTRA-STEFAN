@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, ScrollView, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import Svg from 'react-native-svg';
+import Svg, { G } from 'react-native-svg';
 import { parse } from 'regexp-tree';
-import SvgPanZoom from 'react-native-svg-pan-zoom';
 import DiagramNode from '@/features/regexTester/presentation/components/Diagram/DiagramNode';
 import { NodeData } from '@/features/regexTester/presentation/components/Diagram/types';
 import Text from '@/features/regexTester/presentation/components/atoms/Text/Text';
@@ -59,6 +58,7 @@ export default function Diagrama() {
   const [regex, setRegex] = useState('');
   const [tree, setTree] = useState<NodeData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(1);
 
   const hasAnyInput = regex.trim() !== '';
 
@@ -80,12 +80,13 @@ export default function Diagrama() {
     setRegex('');
     setTree(null);
     setError(null);
+    setZoom(1);
   };
 
   const styles = createStyles(colors);
 
   const svgColors = {
-    nodeFill: colors.nodeFill || '#6a7f9d',
+    nodeFill: colors.nodeFill || '#8398ba',
     nodeText: colors.text,
     lineStroke: colors.lineStroke || '#2c3e50',
   };
@@ -125,28 +126,47 @@ export default function Diagrama() {
       {error && <Text style={styles.error}>{error}</Text>}
 
       {tree && !error && (
-        <View style={{ height: 600, marginTop: 20 }}>
-          <SvgPanZoom
-            canvasWidth={SCREEN_WIDTH * 2}
-            canvasHeight={600}
-            minScale={0.5}
-            maxScale={3}
-            initialZoom={1}
-            panBoundaryPadding={{ top: 0, bottom: 150, left: 50, right: 50 }}
-          >
-            <Svg height={600} width={SCREEN_WIDTH * 2}>
-              <DiagramNode
-                node={tree}
-                x={SCREEN_WIDTH}
-                y={40}
-                level={0}
-                index="0"
-                parentX={null}
-                colors={svgColors}
-              />
-            </Svg>
-          </SvgPanZoom>
-        </View>
+        <>
+          <View style={styles.zoomControls}>
+            <TouchableOpacity
+              style={[styles.zoomButton, { backgroundColor: colors.primary }]}
+              onPress={() => setZoom(prev => Math.min(prev + 0.2, 3))}
+            >
+              <Text style={{ color: colors.text, fontSize: 18 }}>＋</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.zoomButton, { backgroundColor: colors.primary }]}
+              onPress={() => setZoom(prev => Math.max(prev - 0.2, 0.5))}
+            >
+              <Text style={{ color: colors.text, fontSize: 18 }}>－</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.diagramWrapper}>
+            <ScrollView horizontal contentContainerStyle={{ flexGrow: 1 }}>
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <Svg
+                  height={600}
+                  width={SCREEN_WIDTH * 2}
+                  style={{ backgroundColor: colors.background }}
+                >
+                  <G scale={zoom} originX={SCREEN_WIDTH} originY={0}>
+                    <DiagramNode
+                      node={tree}
+                      x={SCREEN_WIDTH}
+                      y={40}
+                      level={0}
+                      index="0"
+                      parentX={null}
+                      colors={svgColors}
+                    />
+                  </G>
+                </Svg>
+              </ScrollView>
+            </ScrollView>
+          </View>
+        </>
       )}
     </ScrollView>
   );
@@ -200,5 +220,25 @@ const createStyles = (colors: any) =>
     backButtonText: {
       fontWeight: 'bold',
       fontSize: 16,
+    },
+    zoomControls: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 10,
+      marginTop: 20,
+      marginBottom: 10,
+    },
+    zoomButton: {
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 10,
+      elevation: 3,
+    },
+    diagramWrapper: {
+      height: 600,
+      borderWidth: 2,
+      borderColor: 'gray',
+      borderRadius: 10,
+      overflow: 'hidden',
     },
   });

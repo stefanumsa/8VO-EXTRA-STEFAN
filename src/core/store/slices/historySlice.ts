@@ -6,7 +6,7 @@ export type HistoryItem = {
   regex: string;
   text: string;
   result: string;
-  timestamp: number; // <-- nuevo campo timestamp
+  timestamp: string; // Ahora correctamente tipado como string
 };
 
 type HistoryState = {
@@ -40,12 +40,20 @@ export const useHistoryStore = create<HistoryState>()(
       history: [],
       addToHistory: (item) =>
         set((state) => {
-          const newItem = { ...item, timestamp: Date.now() };
+          const newItem: HistoryItem = {
+            ...item,
+            timestamp: new Date().toISOString(), // ⏰ Fecha en formato string ISO
+          };
+
+          // Evita duplicados exactos por regex + text
           const filtered = state.history.filter(
             (h) => !(h.regex === newItem.regex && h.text === newItem.text)
           );
+
           return {
-            history: [newItem, ...filtered].sort((a, b) => b.timestamp - a.timestamp),
+            history: [newItem, ...filtered].sort((a, b) =>
+              b.timestamp.localeCompare(a.timestamp)
+            ),
           };
         }),
       clearHistory: () => set({ history: [] }),

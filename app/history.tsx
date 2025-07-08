@@ -33,9 +33,17 @@ export default function History(): JSX.Element {
     setModalVisible(true);
   };
 
-  // Función para formatear fecha legible
-  const formatTimestamp = (timestamp: number) =>
-    new Date(timestamp).toLocaleString();
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('es-MX', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   return (
     <>
