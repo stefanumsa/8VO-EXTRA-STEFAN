@@ -48,7 +48,7 @@ export default function History(): JSX.Element {
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>📜 Historial de expresiones 📜</Text>
+        <Text style={styles.title}>📜 Historial de expresiones </Text>
 
         <View style={{ marginBottom: 12 }}>
           <Button title="Ir a Tester" onPress={() => router.push('/tester')} />

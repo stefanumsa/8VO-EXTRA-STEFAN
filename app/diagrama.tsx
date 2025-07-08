@@ -93,7 +93,7 @@ export default function Diagrama() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>📈Diagrama Visual de Expresión Regular📈</Text>
+      <Text style={styles.title}>📈Diagrama Visual de Expresión Regular</Text>
 
       <TouchableOpacity
         onPress={() => router.push('/tester')}

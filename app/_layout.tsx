@@ -60,11 +60,11 @@ function DrawerLayout(): JSX.Element {
         }}
       >
         {/* Rutas principales del drawer */}
-        <Drawer.Screen name="index" options={{ title: 'Página Principal' }} />
-        <Drawer.Screen name="tester" options={{ title: 'Tester' }} />
-        <Drawer.Screen name="history" options={{ title: 'Historial' }} />
-        <Drawer.Screen name="diagrama" options={{ title: 'Diagrama' }} />
-        <Drawer.Screen name="ast" options={{ title: 'AST' }} />
+        <Drawer.Screen name="index" options={{ title: '🌐 Página Principal' }} />
+        <Drawer.Screen name="tester" options={{ title: '🔍 Tester' }} />
+        <Drawer.Screen name="history" options={{ title: '📜 Historial' }} />
+        <Drawer.Screen name="diagrama" options={{ title: '📈 Diagrama' }} />
+        <Drawer.Screen name="ast" options={{ title: '🌲 AST' }} />
       </Drawer>
     </>
   );

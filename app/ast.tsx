@@ -225,7 +225,7 @@ export default function ASTScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView>
-        <Text style={[styles.title, { color: colors.text }]}>🌲Historial de AST🌲</Text>
+        <Text style={[styles.title, { color: colors.text }]}>🌲Historial de AST</Text>
 
         {/* Aquí agregamos el botón de info de tokens */}
         <View style={{ flexDirection: 'row', gap: 10, marginBottom: 12, justifyContent: 'flex-end' }}>

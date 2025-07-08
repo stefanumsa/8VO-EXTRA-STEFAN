@@ -212,7 +212,7 @@ const generarAST = () => {
 
 return (
   <ScrollView contentContainerStyle={styles.container}>
-    <Text style={styles.title}>🔍Tester de Expresiones Regulares🔍</Text>
+    <Text style={styles.title}>🔍Tester de Expresiones Regulares</Text>
 
     <View style={{ flexDirection: 'row', gap: 10 }}>
   <TouchableOpacity
@@ -222,19 +222,6 @@ return (
     <RNText style={[styles.infoButtonText, { color: colors.text }]}>❓</RNText>
   </TouchableOpacity>
 
-  <TouchableOpacity
-  onPress={() => router.push('/history')}
-  style={[styles.infoButton, { backgroundColor: colors.primary }]}
->
-  <RNText style={[styles.infoButtonText, { color: colors.text }]}>📜</RNText>
-</TouchableOpacity>
-
-  <TouchableOpacity
-  onPress={() => router.push('/ast')}
-  style={[styles.infoButton, { backgroundColor: colors.primary }]}
->
-  <RNText style={[styles.infoButtonText, { color: colors.text }]}>🌲</RNText>
-</TouchableOpacity>
 </View>
 
 
@@ -354,7 +341,7 @@ return (
             {'\n'}
             - Reemplazar palabras/patrones en texto.
             {'\n'}
-            Dividir cadenas de texto.
+            - Dividir cadenas de texto.
 
           </Text>
         </ScrollView>

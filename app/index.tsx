@@ -43,6 +43,13 @@ export default function HomeScreen(): JSX.Element {
         </Text>
       </View>
 
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>🌲 AST</Text>
+        <Text style={styles.paragraph}>
+          Consulta todos los AST que hayas generado anteriormente.
+        </Text>
+      </View>
+
       
     </ScrollView>
   );
