@@ -31,6 +31,7 @@ const DiagramNode: React.FC<Props> = ({ node, x, y, level, index, parentX, color
   const children = expanded && node.children ? node.children.map((child, i) => {
     const childX = x - totalWidth / 2 + i * spacing;
     return (
+      
       <DiagramNode
         key={`${index}-${i}`}
         node={child}
