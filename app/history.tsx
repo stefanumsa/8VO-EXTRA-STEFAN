@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  Text as RNText,
-} from 'react-native';
-import * as Clipboard from 'expo-clipboard';
+import {View,ScrollView,StyleSheet,TouchableOpacity,Alert,Modal,Text as RNText,} from 'react-native';
+import * as Clipboard from 'expo-clipboard'; // Módulo para copiar texto al portapapeles
 import Button from "@/features/regexTester/presentation/components/atoms/Button/Button";
 import Text from "@/features/regexTester/presentation/components/atoms/Text/Text";
-import { useAppTheme } from '@/core/hooks/useAppTheme';
-import { useHistoryStore } from '@/core/store';
-import { useRouter } from 'expo-router';
+import { useAppTheme } from '@/core/hooks/useAppTheme'; // Hook personalizado para obtener colores del tema
+import { useHistoryStore } from '@/core/store'; // Estado global con Zustand para el historial
+import { useRouter } from 'expo-router'; // Navegación entre pantallas
 
 export default function History(): JSX.Element {
   const colors = useAppTheme();
@@ -23,6 +15,7 @@ export default function History(): JSX.Element {
   const styles = createStyles(colors);
   const router = useRouter();
 
+  // Copia un texto al portapapeles y muestra una alerta
   const copyToClipboard = (text: string, label?: string) => {
     Clipboard.setString(text);
     Alert.alert('Copiado', `${label ?? 'Texto'} copiado al portapapeles`);
@@ -33,6 +26,7 @@ export default function History(): JSX.Element {
     setModalVisible(true);
   };
 
+  // Formatea el timestamp para mostrarlo en formato legible (español)
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString('es-MX', {
@@ -63,12 +57,15 @@ export default function History(): JSX.Element {
         {history.length === 0 ? (
           <Text style={styles.noHistoryText}>No hay expresiones guardadas aún.</Text>
         ) : (
+            // Lista de elementos del historial
           history.map((item, index) => (
             <View key={index} style={styles.itemContainer}>
               <TouchableOpacity onPress={() => openDetailsModal(item)}>
                 <Text style={styles.itemText}>{item.regex}</Text>
                 <Text style={styles.timestampText}>{formatTimestamp(item.timestamp)}</Text>
               </TouchableOpacity>
+
+              {/* Botones para copiar o eliminar */}
               <View style={styles.buttonsRow}>
                 <TouchableOpacity
                   onPress={() => copyToClipboard(item.regex, 'Expresión')}
@@ -133,6 +130,7 @@ export default function History(): JSX.Element {
   );
 }
 
+// Estilos dinámicos según colores del tema
 const createStyles = (colors: any) =>
   StyleSheet.create({
     container: {

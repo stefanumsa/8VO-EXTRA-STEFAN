@@ -1,14 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  View,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Animated,
-  Pressable,
-  Text as RNText,
+import {View,Modal,ScrollView,TouchableOpacity,StyleSheet,Alert,Animated,Pressable,Text as RNText,
 } from 'react-native';
 import Text from '@/features/regexTester/presentation/components/atoms/Text/Text';
 import { useASTStore } from '@/core/store/astStore';
@@ -111,21 +102,7 @@ function InteractiveNode({
   // Color del tipo de token
   const underlineColor = typeColors.get(typeText) || 'transparent';
 
-  // Animación flecha expandir/colapsar
-  const rotateAnim = useState(new Animated.Value(expanded ? 0 : 1))[0];
-
-  React.useEffect(() => {
-    Animated.timing(rotateAnim, {
-      toValue: expanded ? 0 : 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  }, [expanded, rotateAnim]);
-
-  const rotateInterpolate = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '-90deg'],
-  });
+  
 
   return (
     <View style={{ marginLeft: depth * 14, marginVertical: 6 }}>
@@ -141,7 +118,6 @@ function InteractiveNode({
               fontSize: 15,
               marginBottom: 4,
             },
-            { transform: [{ rotate: rotateInterpolate }] },
           ]}
         >
           {expanded ? '▼' : '▶'} {typeText} {node.raw ? `(${node.raw})` : ''}
@@ -335,7 +311,7 @@ export default function ASTScreen() {
         </View>
       </Modal>
 
-      <Modal
+      <Modal //Modal sobre los Tokens
   visible={showTokenInfo}
   animationType="slide"
   transparent={false}

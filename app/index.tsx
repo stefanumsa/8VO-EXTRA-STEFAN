@@ -9,6 +9,7 @@ export default function HomeScreen(): JSX.Element {
   const styles = createStyles(colors);
 
   return (
+    // ScrollView para permitir scroll vertical si el contenido es largo
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>¡Bienvenido a 8VO-EXTRA-STEFAN!</Text>
 
@@ -20,6 +21,7 @@ export default function HomeScreen(): JSX.Element {
         </Text>
       </View>
 
+      {/* Tarjeta que explica la sección Tester */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>🔍 Tester</Text>
         <Text style={styles.paragraph}>
@@ -28,6 +30,7 @@ export default function HomeScreen(): JSX.Element {
         </Text>
       </View>
 
+      {/* Tarjeta que explica la sección Historial */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>📜 Historial</Text>
         <Text style={styles.paragraph}>
@@ -36,6 +39,7 @@ export default function HomeScreen(): JSX.Element {
         </Text>
       </View>
 
+      {/* Tarjeta que explica la sección Diagrama */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>📈 Diagrama</Text>
         <Text style={styles.paragraph}>
@@ -43,6 +47,7 @@ export default function HomeScreen(): JSX.Element {
         </Text>
       </View>
 
+      {/* Tarjeta que explica la sección AST */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>🌲 AST</Text>
         <Text style={styles.paragraph}>
@@ -55,6 +60,7 @@ export default function HomeScreen(): JSX.Element {
   );
 }
 
+// Función que crea estilos dinámicos en base a los colores del tema
 const createStyles = (colors: {
   background: string;
   card: string;

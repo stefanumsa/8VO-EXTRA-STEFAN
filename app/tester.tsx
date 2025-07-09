@@ -17,7 +17,7 @@ import { useASTStore } from '@/core/store/astStore';
 
 
 
-
+  // Estados para modales y datos de entrada
 export default function Tester() {
   const colors = useAppTheme();
   const isDark = useSelector((state: RootState) => state.theme.isDarkMode);
@@ -35,7 +35,7 @@ export default function Tester() {
   const { astList } = useASTStore();
   
 
-
+  // Ejemplos precargados para facilitar pruebas rápidas
   const examples = [
     {
       regex:
@@ -54,10 +54,12 @@ export default function Tester() {
     { regex: '(foo|bar)', text: 'foo y bar están en esta frase.' },
   ];
 
+    // Limpia el historial de regex guardado en AsyncStorage al montar el componente
   useEffect(() => {
     AsyncStorage.removeItem('regex-history').catch(() => {});
   }, []);
 
+    // Efecto que recalcula las coincidencias cada vez que cambian regex o texto
   useEffect(() => {
     try {
       const re = new RegExp(regex, 'g');
@@ -70,8 +72,8 @@ export default function Tester() {
     }
   }, [regex, text]);
 
-  const { addAST } = useASTStore();
-
+  // Función para generar el AST a partir de la expresión regular
+const { addAST } = useASTStore();
 const generarAST = () => {
   try {
     const tree = generateAST(regex);
@@ -90,6 +92,7 @@ const generarAST = () => {
 
     setError(null);
 
+      // Alerta con opción de navegar a la vista AST
     Alert.alert('AST generado', 'El AST se generó con éxito.', [
       {
         text: 'Ver AST',
@@ -106,6 +109,7 @@ const generarAST = () => {
   }
 };
 
+  // Confirmación antes de limpiar campos (expresión y texto)
   const confirmClearFields = () => {
     if (Platform.OS === 'web') {
       clearFields();
@@ -117,6 +121,7 @@ const generarAST = () => {
     }
   };
 
+  // Limpia campos de texto, expresión, coincidencias, AST y errores
   const clearFields = () => {
     setRegex('');
     setText('');
@@ -125,6 +130,7 @@ const generarAST = () => {
     setError(null);
   };
 
+    // Exporta el AST generado a un archivo JSON y ofrece compartirlo
   const exportAST = async () => {
     Alert.alert('DEBUG', 'Se presionó el botón Exportar AST');
 
@@ -138,6 +144,7 @@ const generarAST = () => {
       return;
     }
 
+    // Función para evitar problemas con referencias circulares al convertir a JSON
     const safeStringify = (obj: any, space = 2) => {
       const seen = new WeakSet();
       return JSON.stringify(obj, function (key, value) {
@@ -174,6 +181,7 @@ const generarAST = () => {
     }
   };
 
+    // Carga un ejemplo predefinido para probar rápidamente
   const cargarEjemplo = () => {
     const example = examples[exampleIndex];
     setRegex(example.regex);
@@ -210,10 +218,12 @@ const generarAST = () => {
     );
   };
 
+    // Renderizado principal del componente
 return (
   <ScrollView contentContainerStyle={styles.container}>
     <Text style={styles.title}>🔍Tester de Expresiones Regulares</Text>
 
+      {/* Botón para mostrar información sobre tokens */}
     <View style={{ flexDirection: 'row', gap: 10 }}>
   <TouchableOpacity
     onPress={() => setShowTokenInfo(true)}
@@ -224,7 +234,7 @@ return (
 
 </View>
 
-
+      {/* Entrada para expresión regular */}
     <Text style={styles.label}>Expresión Regular:</Text>
     <TextInput
       value={regex}
@@ -234,6 +244,7 @@ return (
       placeholderTextColor={colors.text}
     />
 
+      {/* Entrada para texto a analizar */}
     <Text style={styles.label}>Texto a analizar:</Text>
     <TextInput
       value={text}
@@ -244,10 +255,12 @@ return (
       placeholderTextColor={colors.text}
     />
 
+      {/* Resultado de las coincidencias */}
     <Text style={styles.label}>Resultado:</Text>
     {error ? (
       <Text style={styles.error}>{error}</Text>
     ) : (
+              // Resalta los caracteres que coinciden con la regex
       <Text style={[styles.text, { color: colors.text }]}>
         {text.split('').map((char, i) => {
           const matched = matches.some(
@@ -268,10 +281,12 @@ return (
       </Text>
     )}
 
+      {/* Botón para cargar ejemplo */}
     <View style={styles.buttonContainer}>
       <Button title="Probar con un ejemplo" onPress={cargarEjemplo} />
     </View>
 
+      {/* Botones que solo aparecen si hay texto en los inputs */}
     {hasAnyInput && (
       <>
         <View style={styles.buttonContainer}>
@@ -280,6 +295,8 @@ return (
         <View style={styles.buttonContainer}>
           <Button title="Borrar expresión y texto" onPress={confirmClearFields} />
         </View>
+
+                  {/* Botón para exportar AST solo si ya se generó */}
         {ast && (
           <View style={styles.buttonContainer}>
             <Button title="Exportar AST" onPress={exportAST} />
@@ -341,7 +358,7 @@ return (
             {'\n'}
             - Reemplazar palabras/patrones en texto.
             {'\n'}
-            - Dividir cadenas de texto.
+            -Dividir cadenas de texto.
 
           </Text>
         </ScrollView>
@@ -362,7 +379,7 @@ return (
 );
 
 }
-
+// Función que crea estilos dinámicos en base a los colores del tema
 const createStyles = (colors: any) =>
   StyleSheet.create({
     container: {
